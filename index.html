@@ -1,59 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Revueltos en IA — Delegados</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Revueltos en IA</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="hero">
-    <div class="brand">
-      <div class="logo">🔵</div>
-      <div>
-        <h1>Revueltos en IA</h1>
-        <p class="tag">IA para delegados — fuentes oficiales y análisis diplomático</p>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <aside class="left">
-      <label>Función</label>
-      <select id="mode">
-        <option value="search">🔍 Buscador oficial</option>
-        <option value="interpelar">🗣 Interpelación (3ª persona)</option>
-        <option value="corregir">✍ Corrección de discursos</option>
-        <option value="desglose">📘 Desglose de tópico</option>
-        <option value="posicion">📄 Corrección documento de posición</option>
-      </select>
-
-      <label>Comisión</label>
-      <input id="committee" placeholder="Ej: Asamblea General" />
-
-      <label>Delegación</label>
-      <input id="delegation" placeholder="Ej: República Dominicana" />
-
-      <label>Texto / Pregunta</label>
-      <textarea id="input" rows="6" placeholder="Escribe la pregunta, discurso o documento..."></textarea>
-
-      <div class="controls">
-        <button id="generate">Generar</button>
-        <button id="clear">Limpiar</button>
-      </div>
-
-      <small class="note">Notas: la IA usa solo fuentes oficiales para el buscador y responde en tono diplomático MUN.</small>
-    </aside>
-
-    <section class="right">
-      <div id="results"></div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    Revueltos en IA • Desarrollado para delegados • No expone tus claves.
-  </footer>
+  <h1>Revueltos en IA</h1>
+  <input id="inputQuery" placeholder="Escribe tu pregunta">
+  <button id="btnSearch">Buscar</button>
+  <pre id="result"></pre>
 
   <script src="main.js"></script>
+  <script>
+    const btn = document.getElementById('btnSearch')
+    btn.addEventListener('click', async () => {
+      const query = document.getElementById('inputQuery').value
+      const data = await buscar(query)
+      document.getElementById('result').textContent = JSON.stringify(data, null, 2)
+    })
+  </script>
 </body>
 </html>
