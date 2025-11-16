@@ -4,11 +4,22 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
+// ================================
 // Variables de entorno
+// ================================
 const GEMINI_KEY = process.env.GEMINI_API_KEY;
 const DEEPSEEK_KEY = process.env.DEEPSEEK_KEY;
 
+// ================================
+// Ruta de bienvenida
+// ================================
+app.get("/", (req, res) => {
+  res.send("¡Revueltos en IA está funcionando! 🚀\nUsa las rutas /search, /interpelate, /correct-speech, /topic-breakdown y /correct-position");
+});
+
+// ================================
 // 1️⃣ Buscador con Gemini
+// ================================
 app.get("/search", async (req, res) => {
   const query = req.query.q;
   if (!query) return res.status(400).send("Falta query");
@@ -25,7 +36,9 @@ app.get("/search", async (req, res) => {
   res.json(data);
 });
 
+// ================================
 // 2️⃣ Interpelación estilo MUN
+// ================================
 app.post("/interpelate", async (req, res) => {
   const { text } = req.body;
   if (!text) return res.status(400).send("Falta texto");
@@ -42,7 +55,9 @@ app.post("/interpelate", async (req, res) => {
   res.json(data);
 });
 
+// ================================
 // 3️⃣ Corrección de discursos
+// ================================
 app.post("/correct-speech", async (req, res) => {
   const { text } = req.body;
   if (!text) return res.status(400).send("Falta texto");
@@ -59,7 +74,9 @@ app.post("/correct-speech", async (req, res) => {
   res.json(data);
 });
 
+// ================================
 // 4️⃣ Desglose de tópicos
+// ================================
 app.post("/topic-breakdown", async (req, res) => {
   const { topic } = req.body;
   if (!topic) return res.status(400).send("Falta tópico");
@@ -76,7 +93,9 @@ app.post("/topic-breakdown", async (req, res) => {
   res.json(data);
 });
 
+// ================================
 // 5️⃣ Corrección de documentos de posición
+// ================================
 app.post("/correct-position", async (req, res) => {
   const { text } = req.body;
   if (!text) return res.status(400).send("Falta texto");
@@ -93,6 +112,8 @@ app.post("/correct-position", async (req, res) => {
   res.json(data);
 });
 
-// Servidor
+// ================================
+// Iniciar servidor
+// ================================
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
