@@ -1,65 +1,68 @@
-addEventListener('fetch', event => { event.respondWith(handle(event.request)) });
+// ai.js - Worker para Revueltos en IA
+// Llama a Gemini DeepResearch y Deepsek usando Secrets
 
-const GEMINI_API_KEY = /* Agrega tu secreto en Cloudflare */;
-const DEEPSEK_KEY = /* Agrega tu secreto en Cloudflare */;
+const GEMINI_API_KEY = GEMINI_API_KEY;
+const DEEPSEK_KEY = DEEPSEK_KEY;
 
-async function handle(request){
-  const url = new URL(request.url);
-  if(url.pathname.startsWith('/api/search')) return await handleSearch(request);
-  if(url.pathname.startsWith('/api/llm')) return await handleLLM(request);
-  return new Response('Revueltos en IA - Worker', {status:200});
-}
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
 
-// Buscador Gemini DeepResearch
-async function handleSearch(request){
-  try{
-    const body = await request.json();
-    const query = body.text;
-    const res = await fetch("https://api.gemini.com/v1/deepsearch",{
-      method:"POST",
-      headers:{ "Authorization":`Bearer ${GEMINI_API_KEY}`,"Content-Type":"application/json" },
-      body: JSON.stringify({ query, limit:10 })
-    });
-    const data = await res.json();
-    const items = (data.results||[])
-      .filter(r=>/(\.org|\.gov|\.un\.org)/i.test(r.url))
-      .map(r=>({ title:r.title,url:r.url,domain:(new URL(r.url)).hostname,date:r.date,summary:r.snippet }));
-    return json({ type:"search", items });
-  }catch(e){ return json({error:e.message},500); }
-}
+async function handleRequest(request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const action = searchParams.get('action') // ejemplo: 'search', 'analysis'
 
-// Análisis / IA Deepsek
-async function handleLLM(request){
-  try{
-    const body = await request.json();
-    const { mode, text, committee, delegation } = body;
-    let prompt="", output="";
-    if(mode==="interpelar"){
-      prompt=`Analiza críticamente este discurso de forma MUN en tercera persona: "${text}" Delegación: ${delegation}`;
-    }else if(mode==="corregir"){
-      prompt=`Corrige este discurso respetando estructura MUN (introducción global, desarrollo nacional, conclusión internacional): "${text}" Delegación: ${delegation}, Comisión: ${committee}`;
-    }else if(mode==="desglose"){
-      prompt=`Genera preguntas investigativas para el tópico: "${text}" Delegación: ${delegation}`;
-    }else if(mode==="posicion"){
-      prompt=`Evalúa y corrige este documento de posición (500-800 palabras, con bibliografía oficial): "${text}" Delegación: ${delegation}, Comisión: ${committee}`;
-    }else{
-      return json({error:"Modo no soportado"},400);
+    if (action === 'search') {
+      const query = searchParams.get('q')
+      const response = await searchGemini(query)
+      return new Response(JSON.stringify(response), {
+        headers: { 'Content-Type': 'application/json' }
+      })
     }
-    output = await callDeepsek(prompt);
-    return json({ type:"text", output });
-  }catch(e){ return json({error:e.message},500); }
+
+    if (action === 'analysis') {
+      const text = searchParams.get('text')
+      const response = await analyzeDeepsek(text)
+      return new Response(JSON.stringify(response), {
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+
+    return new Response(JSON.stringify({ error: 'Acción no válida' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 400
+    })
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500
+    })
+  }
 }
 
-// Llamada a Deepsek
-async function callDeepsek(prompt){
-  const res = await fetch("https://api.deepsek.com/v1/analyze",{
-    method:"POST",
-    headers:{"Authorization":`Bearer ${DEEPSEK_KEY}`,"Content-Type":"application/json"},
-    body: JSON.stringify({ prompt })
-  });
-  if(!res.ok){ const t=await res.text(); throw new Error("Deepsek error: "+t);}
-  const js = await res.json();
-  return js.output || "";
+// Función que llama a Gemini DeepResearch
+async function searchGemini(query) {
+  const res = await fetch('https://api.gemini.com/deepsearch', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${GEMINI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query })
+  })
+  return await res.json()
 }
 
-function json(obj,status=200){return new Response(JSON.stringify(obj,null,2),{status,headers:{"Content-Type":"application/json"}});}
+// Función que llama a Deepsek para análisis
+async function analyzeDeepsek(text) {
+  const res = await fetch('https://api.deepsek.com/analyze', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${DEEPSEK_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ text })
+  })
+  return await res.json()
+}
