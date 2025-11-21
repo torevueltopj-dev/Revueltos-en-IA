@@ -3,391 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To' Revuelto's IA - Asistente MUN</title>
+    <title>Probador API DeepSeek</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            padding-top: 64px;
-            padding-bottom: 80px;
-        }
-        .menu-button.active svg {
-            transform: rotate(90deg);
-        }
-        .loading {
-            display: none;
-        }
-        .result-container {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-        .result-container.active {
-            max-height: 1000px;
-        }
-        .mode-indicator {
-            display: none;
-        }
-        .mode-indicator.active {
-            display: block;
-        }
-        .mode-button {
-            transition: all 0.2s ease;
-        }
-        .mode-button.active {
-            background-color: #3b82f6;
-            color: white;
-        }
-        .thinking-process {
-            background: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 0 8px 8px 0;
         }
     </style>
 </head>
-<body class="min-h-screen bg-white text-black">
+<body class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-2xl mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">🔍 Probador API DeepSeek</h1>
+            <p class="text-gray-600 mt-2">Verifica que tu API key funcione correctamente</p>
+        </div>
 
-    <!-- ENCABEZADO FIJO -->
-    <header class="fixed top-0 left-0 w-full bg-white shadow-lg z-20">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <img src="https://placehold.co/40x40/007AFF/ffffff?text=Logo" alt="Logo" class="h-10 w-10 rounded-full">
-                <h1 class="text-xl font-black text-blue-600 tracking-wide">
-                    To' Revuelto's IA
-                </h1>
+        <!-- Configuración API -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Configuración</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Tu API Key de DeepSeek
+                    </label>
+                    <input 
+                        type="password" 
+                        id="apiKey" 
+                        placeholder="sk-..."
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        value="sk-b3f2e2bc2dcd420a9ce681e5eba05e61"
+                    >
+                    <p class="text-xs text-gray-500 mt-2">
+                        Tu API key se guarda localmente en tu navegador
+                    </p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button id="testApi" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        🔍 Probar API Key
+                    </button>
+                    <button id="clearKey" class="px-4 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                        🗑️ Limpiar
+                    </button>
+                </div>
             </div>
-
-            <button id="menuButton" class="menu-button p-3 rounded-full bg-blue-600 text-white shadow-xl transition-all duration-300 hover:bg-blue-700">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 transition-transform duration-300">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </button>
-        </div>
-    </header>
-
-    <!-- MENÚ DESPLEGABLE -->
-    <div id="dropdownMenu" class="fixed top-16 right-4 z-30 w-64 bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300 origin-top-right scale-0 opacity-0">
-        <div class="p-2">
-            <button data-mode="search" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
-                🔍 Búsqueda Diplomática
-            </button>
-            <button data-mode="interpellation" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
-                💬 Interpelación
-            </button>
-            <button data-mode="speech_correction" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
-                📝 Corrección de discursos
-            </button>
-            <button data-mode="topic_breakdown" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
-                🎯 Desglose de tópico
-            </button>
-            <button data-mode="position_correction" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
-                📄 Corrección de Documento
-            </button>
-        </div>
-    </div>
-    
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="max-w-xl mx-auto p-4">
-        <!-- Indicador de modo activo -->
-        <div id="modeIndicator" class="mode-indicator mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p class="text-blue-700 text-sm font-medium">
-                <span id="currentModeText">Búsqueda Diplomática</span> activa
-            </p>
         </div>
 
-        <!-- Proceso de pensamiento (Deep Thinking) -->
-        <div id="thinkingProcess" class="thinking-process hidden mb-4">
-            <p class="text-sm text-gray-600 font-medium">Procesando con DeepSeek...</p>
-            <div id="thinkingSteps" class="text-xs text-gray-500 mt-2"></div>
-        </div>
+        <!-- Prueba de Funcionalidades -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Prueba Rápida</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Mensaje de prueba
+                    </label>
+                    <textarea 
+                        id="testMessage" 
+                        placeholder="Escribe un mensaje para probar la API..."
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-24"
+                    >Hola, ¿puedes explicarme qué es un Modelo de Naciones Unidas (MUN) en 2-3 oraciones?</textarea>
+                </div>
 
-        <!-- Contenedor de resultados -->
-        <div id="resultContainer" class="result-container bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
-            <div id="responseContent" class="text-gray-700"></div>
-        </div>
-
-        <!-- Mensaje de bienvenida -->
-        <div id="welcomeMessage" class="text-center py-10">
-            <p class="text-gray-500 text-lg">
-                ¡Bienvenido a To' Revuelto's IA!
-            </p>
-            <p class="text-gray-400 mt-2">
-                Usa la barra de búsqueda inferior para iniciar tu consulta.
-            </p>
-        </div>
-
-        <!-- Indicador de carga -->
-        <div id="loadingIndicator" class="loading text-center py-8">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p class="text-gray-500 mt-2">Procesando con DeepSeek...</p>
-        </div>
-    </main>
-
-    <!-- BARRA DE BÚSQUEDA FIJA -->
-    <footer class="fixed bottom-0 left-0 w-full bg-white shadow-2xl z-20">
-        <div class="max-w-7xl mx-auto p-4">
-            <div class="flex items-center space-x-2">
-                <input type="text" 
-                       id="searchInput"
-                       placeholder="Escribe tu consulta aquí..." 
-                       class="flex-grow p-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-blue-600 transition-colors text-black">
-
-                <button id="searchButton" class="p-3 rounded-full bg-blue-600 text-white shadow-lg transition-colors duration-200 hover:bg-blue-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                <button id="sendTest" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                    🚀 Enviar Prueba
                 </button>
             </div>
         </div>
-    </footer>
 
-    <!-- Lógica JavaScript para DeepSeek -->
+        <!-- Resultados -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Resultados</h2>
+            
+            <div id="loading" class="hidden text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="text-gray-500 mt-2">Procesando con DeepSeek...</p>
+            </div>
+
+            <div id="results" class="space-y-4">
+                <div id="apiStatus" class="hidden p-4 rounded-lg border">
+                    <!-- Aquí se mostrará el estado de la API -->
+                </div>
+
+                <div id="testResults" class="hidden">
+                    <h3 class="font-medium text-gray-700 mb-2">Respuesta de DeepSeek:</h3>
+                    <div id="apiResponse" class="p-4 bg-gray-50 rounded-lg border border-gray-200 min-h-32">
+                        <!-- Aquí se mostrará la respuesta -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de Debug -->
+        <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <h3 class="font-medium text-yellow-800">💡 Información para Debug</h3>
+            <div class="text-sm text-yellow-700 mt-2 space-y-1">
+                <p><strong>Error 402:</strong> Saldo insuficiente en tu cuenta de DeepSeek</p>
+                <p><strong>Error 401:</strong> API key inválida o expirada</p>
+                <p><strong>Error 429:</strong> Límite de solicitudes excedido</p>
+                <p><a href="https://platform.deepseek.com/api_keys" target="_blank" class="underline">Gestiona tu API key aquí</a></p>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const menuButton = document.getElementById('menuButton');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            const searchButton = document.getElementById('searchButton');
-            const searchInput = document.getElementById('searchInput');
-            const modeIndicator = document.getElementById('modeIndicator');
-            const currentModeText = document.getElementById('currentModeText');
-            const resultContainer = document.getElementById('resultContainer');
-            const responseContent = document.getElementById('responseContent');
-            const welcomeMessage = document.getElementById('welcomeMessage');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const modeButtons = document.querySelectorAll('.mode-button');
-            const thinkingProcess = document.getElementById('thinkingProcess');
-            const thinkingSteps = document.getElementById('thinkingSteps');
+            const apiKeyInput = document.getElementById('apiKey');
+            const testApiBtn = document.getElementById('testApi');
+            const clearKeyBtn = document.getElementById('clearKey');
+            const sendTestBtn = document.getElementById('sendTest');
+            const testMessageInput = document.getElementById('testMessage');
+            const loadingDiv = document.getElementById('loading');
+            const apiStatusDiv = document.getElementById('apiStatus');
+            const testResultsDiv = document.getElementById('testResults');
+            const apiResponseDiv = document.getElementById('apiResponse');
 
-            // API Key de DeepSeek
-            const DEEPSEEK_API_KEY = 'sk-b3f2e2bc2dcd420a9ce681e5eba05e61';
-            let currentMode = 'search';
+            // Cargar API key guardada
+            const savedApiKey = localStorage.getItem('deepseekApiKey');
+            if (savedApiKey) {
+                apiKeyInput.value = savedApiKey;
+            }
 
-            // Manejador del menú desplegable
-            function toggleMenu() {
-                const isHidden = dropdownMenu.classList.contains('scale-0');
-                
-                if (isHidden) {
-                    dropdownMenu.classList.remove('scale-0', 'opacity-0');
-                    dropdownMenu.classList.add('scale-100', 'opacity-100');
-                    menuButton.classList.add('active');
-                } else {
-                    dropdownMenu.classList.remove('scale-100', 'opacity-100');
-                    dropdownMenu.classList.add('scale-0', 'opacity-0');
-                    menuButton.classList.remove('active');
+            // Guardar API key
+            function saveApiKey() {
+                const apiKey = apiKeyInput.value.trim();
+                if (apiKey) {
+                    localStorage.setItem('deepseekApiKey', apiKey);
+                    showStatus('API key guardada correctamente', 'success');
                 }
             }
 
-            // Cambiar modo de la IA
-            function setMode(mode) {
-                currentMode = mode;
-                
-                // Actualizar botones activos
-                modeButtons.forEach(button => {
-                    if (button.getAttribute('data-mode') === mode) {
-                        button.classList.add('active');
-                    } else {
-                        button.classList.remove('active');
-                    }
-                });
-                
-                // Actualizar texto del modo
-                const modeTexts = {
-                    'search': '🔍 Búsqueda Diplomática',
-                    'interpellation': '💬 Interpelación',
-                    'speech_correction': '📝 Corrección de Discursos',
-                    'topic_breakdown': '🎯 Desglose de Tópico',
-                    'position_correction': '📄 Corrección de Documento'
-                };
-                
-                currentModeText.textContent = modeTexts[mode];
-                modeIndicator.classList.add('active');
-                
-                // Actualizar placeholder según el modo
-                const placeholders = {
-                    'search': 'Escribe tu pregunta de investigación...',
-                    'interpellation': 'Pega el discurso para interpelar...',
-                    'speech_correction': 'Pega tu discurso para corregir...',
-                    'topic_breakdown': 'Escribe el tópico a desglosar...',
-                    'position_correction': 'Pega tu documento de posición...'
-                };
-                
-                searchInput.placeholder = placeholders[mode];
-            }
+            // Probar API key
+            async function testApiKey() {
+                const apiKey = apiKeyInput.value.trim();
+                if (!apiKey) {
+                    showStatus('Por favor, ingresa tu API key', 'error');
+                    return;
+                }
 
-            // Mostrar proceso de pensamiento
-            function showThinkingProcess(mode) {
-                thinkingProcess.classList.remove('hidden');
-                thinkingSteps.innerHTML = '';
-                
-                const thinkingMessages = {
-                    'search': '🔍 Buscando información diplomática relevante...',
-                    'interpellation': '💬 Analizando discurso para interpelación...',
-                    'speech_correction': '📝 Evaluando estructura del discurso MUN...',
-                    'topic_breakdown': '🎯 Desglosando tópico en preguntas de investigación...',
-                    'position_correction': '📄 Revisando documento de posición...'
-                };
-                
-                thinkingSteps.innerHTML = `<div class="mb-1">${thinkingMessages[mode]}</div>`;
-            }
+                saveApiKey();
+                showStatus('Probando API key...', 'loading');
 
-            // Procesar consulta con DeepSeek
-            async function processQuery(query) {
-                // Mostrar indicador de carga y proceso de pensamiento
-                loadingIndicator.style.display = 'block';
-                welcomeMessage.style.display = 'none';
-                resultContainer.classList.remove('active');
-                showThinkingProcess(currentMode);
-                
                 try {
-                    // Construir prompt según el modo
-                    let prompt = '';
-                    
-                    switch(currentMode) {
-                        case 'search':
-                            prompt = `Como asistente diplomático MUN, busca información sobre: "${query}". Proporciona enlaces relevantes de sitios .org, gubernamentales o de la ONU. Organiza por fecha (más reciente primero). Para cada enlace, incluye un breve resumen. Responde en español.`;
-                            break;
-                        case 'interpellation':
-                            prompt = `Como delegado MUN, analiza críticamente este discurso: "${query}". Cuestiona cada punto usando tercera persona ("La delegación de X se cuestiona..."). Sé diplomático pero crítico. Responde en español.`;
-                            break;
-                        case 'speech_correction':
-                            prompt = `Corrige este discurso MUN: "${query}". Evalúa: 1) Introducción (nivel mundial), 2) Desarrollo (nivel nacional), 3) Conclusión (propuestas internacionales). Da correcciones específicas. Responde en español.`;
-                            break;
-                        case 'topic_breakdown':
-                            prompt = `Desglosa este tópico MUN: "${query}". Genera preguntas de investigación sobre: antecedentes, situación actual, actores clave, desafíos, soluciones. Responde en español.`;
-                            break;
-                        case 'position_correction':
-                            prompt = `Corrige este documento de posición MUN: "${query}". Verifica: estructura, formato (500-800 palabras), argumentación. Da correcciones específicas. Responde en español.`;
-                            break;
-                    }
-                    
-                    // Llamada a la API de DeepSeek
                     const response = await fetch('https://api.deepseek.com/chat/completions', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                            'Authorization': `Bearer ${apiKey}`
                         },
                         body: JSON.stringify({
                             model: 'deepseek-chat',
                             messages: [
                                 {
                                     role: 'user',
-                                    content: prompt
+                                    content: 'Responde con "OK" si estás funcionando correctamente.'
                                 }
                             ],
+                            max_tokens: 10,
                             stream: false
                         })
                     });
-                    
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(`Error ${response.status}: ${errorText}`);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        showStatus('✅ API key válida - Conexión exitosa', 'success');
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(`Error ${response.status}: ${errorData.error?.message || 'Error en la API'}`);
                     }
-                    
+                } catch (error) {
+                    console.error('Error testing API:', error);
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                }
+            }
+
+            // Enviar mensaje de prueba
+            async function sendTestMessage() {
+                const apiKey = apiKeyInput.value.trim();
+                const message = testMessageInput.value.trim();
+
+                if (!apiKey) {
+                    showStatus('Primero configura tu API key', 'error');
+                    return;
+                }
+
+                if (!message) {
+                    showStatus('Escribe un mensaje de prueba', 'error');
+                    return;
+                }
+
+                loadingDiv.classList.remove('hidden');
+                testResultsDiv.classList.add('hidden');
+                apiResponseDiv.innerHTML = '';
+
+                try {
+                    const response = await fetch('https://api.deepseek.com/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'deepseek-chat',
+                            messages: [
+                                {
+                                    role: 'user',
+                                    content: message
+                                }
+                            ],
+                            max_tokens: 500,
+                            stream: false
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Error ${response.status}: ${errorData.error?.message || 'Error en la API'}`);
+                    }
+
                     const data = await response.json();
-                    
-                    // Extraer texto de respuesta
                     const responseText = data.choices[0].message.content;
-                    
-                    // Mostrar resultados
-                    responseContent.innerHTML = formatResponse(responseText, currentMode);
-                    resultContainer.classList.add('active');
-                    
+
+                    apiResponseDiv.innerHTML = responseText.replace(/\n/g, '<br>');
+                    testResultsDiv.classList.remove('hidden');
+                    showStatus('✅ Mensaje procesado correctamente', 'success');
+
                 } catch (error) {
                     console.error('Error:', error);
-                    responseContent.innerHTML = `
-                        <div class="p-4 bg-red-50 rounded-lg border border-red-200">
-                            <p class="text-red-700 font-medium">Error al procesar la solicitud</p>
-                            <p class="text-red-600 text-sm mt-2">${error.message}</p>
-                            <p class="text-red-600 text-sm mt-2">Intenta nuevamente o verifica tu conexión.</p>
-                        </div>
-                    `;
-                    resultContainer.classList.add('active');
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                    apiResponseDiv.innerHTML = `Error: ${error.message}`;
+                    testResultsDiv.classList.remove('hidden');
                 } finally {
-                    // Ocultar indicadores
-                    loadingIndicator.style.display = 'none';
-                    thinkingProcess.classList.add('hidden');
+                    loadingDiv.classList.add('hidden');
                 }
             }
 
-            // Formatear la respuesta según el modo
-            function formatResponse(text, mode) {
-                let formattedText = text;
-                
-                // Aplicar formato según el modo
-                switch(mode) {
-                    case 'search':
-                        // Resaltar enlaces
-                        formattedText = formattedText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="text-blue-600 underline font-medium" target="_blank">$1</a>');
-                        // Resaltar fechas
-                        formattedText = formattedText.replace(/(\d{1,2}\/\d{1,2}\/\d{4}|\d{4})/g, '<span class="bg-yellow-100 px-1 rounded">$1</span>');
-                        break;
-                    case 'interpellation':
-                        // Resaltar frases de cuestionamiento
-                        formattedText = formattedText.replace(/(La delegación de [^\.]+\.)/g, '<span class="text-red-600 font-medium bg-red-50 px-2 py-1 rounded">$1</span>');
-                        formattedText = formattedText.replace(/(Como [^\?]+\?)/g, '<span class="text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded">$1</span>');
-                        break;
-                    case 'speech_correction':
-                    case 'position_correction':
-                        // Resaltar secciones
-                        formattedText = formattedText.replace(/(Introducción|Desarrollo|Conclusión|Bibliografía)/g, '<span class="font-bold text-green-700">$1</span>');
-                        formattedText = formattedText.replace(/(✅|⚠️|📝)/g, '<span class="text-lg">$1</span>');
-                        break;
-                }
-                
-                // Mantener saltos de línea
-                formattedText = formattedText.replace(/\n/g, '<br>');
-                
-                return formattedText;
+            // Mostrar estado
+            function showStatus(message, type) {
+                apiStatusDiv.classList.remove('hidden');
+                apiStatusDiv.className = 'p-4 rounded-lg border';
+
+                const colors = {
+                    success: 'bg-green-50 border-green-200 text-green-700',
+                    error: 'bg-red-50 border-red-200 text-red-700',
+                    loading: 'bg-blue-50 border-blue-200 text-blue-700'
+                };
+
+                apiStatusDiv.className += ` ${colors[type]}`;
+                apiStatusDiv.innerHTML = message;
             }
 
-            // Event Listeners
-            menuButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                toggleMenu();
-            });
+            // Limpiar API key
+            function clearApiKey() {
+                apiKeyInput.value = '';
+                localStorage.removeItem('deepseekApiKey');
+                showStatus('API key eliminada', 'success');
+            }
 
-            modeButtons.forEach(option => {
-                option.addEventListener('click', () => {
-                    const mode = option.getAttribute('data-mode');
-                    setMode(mode);
-                    toggleMenu();
-                });
-            });
+            // Event listeners
+            apiKeyInput.addEventListener('input', saveApiKey);
+            testApiBtn.addEventListener('click', testApiKey);
+            clearKeyBtn.addEventListener('click', clearApiKey);
+            sendTestBtn.addEventListener('click', sendTestMessage);
 
-            document.body.addEventListener('click', (event) => {
-                if (!dropdownMenu.classList.contains('scale-0') && !menuButton.contains(event.target)) {
-                    toggleMenu();
-                }
-            });
-
-            searchButton.addEventListener('click', () => {
-                const query = searchInput.value.trim();
-                if (query) {
-                    processQuery(query);
-                    searchInput.value = ''; // Limpiar input después de enviar
-                }
-            });
-
-            searchInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    const query = searchInput.value.trim();
-                    if (query) {
-                        processQuery(query);
-                        searchInput.value = ''; // Limpiar input después de enviar
-                    }
-                }
-            });
-
-            // Inicializar
-            setMode('search');
+            // Probar automáticamente si hay API key guardada
+            if (savedApiKey) {
+                setTimeout(() => {
+                    testApiKey();
+                }, 1000);
+            }
         });
     </script>
 </body>
