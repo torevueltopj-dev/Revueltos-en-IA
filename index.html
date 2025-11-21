@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To' Revuelto's IA - Asistente MUN</title>
-    <!-- Carga de Tailwind CSS para estilos -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuración para usar la fuente Inter y colores personalizados -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
@@ -46,29 +44,22 @@
 </head>
 <body class="min-h-screen bg-white text-black">
 
-    <!-- 1. ENCABEZADO FIJO (TOP) -->
+    <!-- ENCABEZADO FIJO -->
     <header class="fixed top-0 left-0 w-full bg-white shadow-lg z-20">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Logo e Identificador -->
             <div class="flex items-center space-x-3">
-                <!-- Logo Placeholder -->
                 <img 
                     src="https://placehold.co/40x40/007AFF/ffffff?text=Logo" 
                     alt="Logo To' Revuelto's IA" 
                     class="h-10 w-10 rounded-full object-cover"
-                    onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxOS41IiBmaWxsPSIjRjM2NTAwIi8+PHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTE2LjQ0MSAxOC41NDRsMS4yODktMS4yODktMy41MTUtMy41MThMOC42OTYgMjIuNjIybDcuNzQ1LTMuMDc4Wm0xMC41OTQgLjQxMmMtLjE5NS0uMjkzLS40NTgtLjU1Ni0uNzgxLS43MTktMS40NjgtLjY4Ny00Ljg0My0uNDItNS40OTktLjg3NS0uMDYyLS4wNjMtLjIxOC0uMjgxLS4wOTMtLjMyOGwtLjQzNy0uNTMxLS41NjIuNzgxYy0uMzQ0LjUzMS0uNTkxIDEuMDYyLS42NTYgMS40MDYtLjMyOCAxLjEwOS4xMjUgMi4xMjUtLjQzNyAzLjMzMi0uMjY1LjU3OC0uNTYyIDEuMTg4LS40MDYgMS43NS4xNTYgLjU2Mi4wOTQgMS4wNDctLjE1NiAxLjU2Mi0uMjUtLjU5My0uNDIxLTEuMzA5LS4xODctMS45NTMuMTg3LS41NDYuNTYyLTEuMDQ2IDEuMjAzLTEuMjUuNTkzLS4xODcgMS40ODQtLjY1NiAyLjM1OS0uMjUuOTY5LjQyMSAxLjczNSAuOTg0IDIuNDgzIDEuMjY1LjYyNS4yMiA1LjQyMSAxLjU5MyA2LjE1Ni0xLjMxMi4xODctLjMxMi4wNzgtLjYxMi0uMDYzLS44NzVMMTkuNjM0IDMxLjU0Yy4wNjMtLjE4Ny4wOTQtLjQzNy4wOTQtLjY1NlYyOS4yOWMtLjEyNS0uMTU2LS4yNS0uNDgzLS41My0uNzE5LS4yODEtLjIxOC0uNDIyLS40NjgtLjQyMS0uNzE5di0zLjg0NGMuMDMyLS4yNzkuMjQ0LS40OTYuNTE3LS41NTZ6TTE5LjYzNCAzNS44NDVjMS40MzYgMCAyLjU2Mi0xLjEyNSAyLjU2Mi0yLjUzMiAwLTEuNDM2LTEuMTI2LTIuNTYyLTIuNTYyLTIuNTYyLTEuNDM3IDAtMi41NjIgMS4xMjYtMi41NjIgMi41NjIgMCAxLjQzNyAxLjEyNSAyLjUzMiAyLjU2MiAyLjUzMloiLz48L3N2Zz4='"
                 >
-                <!-- Nombre de la App en Azul -->
                 <h1 class="text-xl font-black text-blue-600 tracking-wide">
                     To' Revuelto's IA
                 </h1>
             </div>
 
-            <!-- Botón de Menú Redondo -->
             <button id="menuButton" 
-                    class="menu-button p-3 rounded-full bg-blue-600 text-white shadow-xl transition-all duration-300 hover:bg-blue-700 active:scale-95" 
-                    aria-label="Abrir menú de opciones">
-                <!-- Icono de 3 puntos verticales -->
+                    class="menu-button p-3 rounded-full bg-blue-600 text-white shadow-xl transition-all duration-300 hover:bg-blue-700 active:scale-95">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 transition-transform duration-300">
                     <circle cx="12" cy="12" r="1"></circle>
                     <circle cx="12" cy="5" r="1"></circle>
@@ -78,33 +69,29 @@
         </div>
     </header>
 
-    <!-- Menú Desplegable (Inicialmente Oculto) -->
+    <!-- MENÚ DESPLEGABLE -->
     <div id="dropdownMenu" 
-         class="fixed top-16 right-4 z-30 w-64 bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300 origin-top-right scale-0 opacity-0" 
-         role="menu" 
-         aria-orientation="vertical" 
-         aria-labelledby="menuButton">
+         class="fixed top-16 right-4 z-30 w-64 bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300 origin-top-right scale-0 opacity-0">
         <div class="p-2">
-            <!-- Opciones del menú -->
-            <button data-mode="search" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors" role="menuitem">
+            <button data-mode="search" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
                 Búsqueda Diplomática
             </button>
-            <button data-mode="interpellation" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors" role="menuitem">
+            <button data-mode="interpellation" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
                 Interpelación
             </button>
-            <button data-mode="speech_correction" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors" role="menuitem">
+            <button data-mode="speech_correction" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
                 Corrección de discursos
             </button>
-            <button data-mode="topic_breakdown" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors" role="menuitem">
+            <button data-mode="topic_breakdown" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
                 Desglose de tópico
             </button>
-            <button data-mode="position_correction" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors" role="menuitem">
-                Corrección de Documento de posición
+            <button data-mode="position_correction" class="mode-button w-full text-left px-4 py-3 text-sm text-black hover:bg-gray-100 rounded-lg transition-colors">
+                Corrección de Documento
             </button>
         </div>
     </div>
     
-    <!-- 2. CONTENIDO PRINCIPAL -->
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="max-w-xl mx-auto p-4">
         <!-- Indicador de modo activo -->
         <div id="modeIndicator" class="mode-indicator mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -135,21 +122,16 @@
         </div>
     </main>
 
-    <!-- 3. BARRA DE BÚSQUEDA FIJA (BOTTOM) -->
+    <!-- BARRA DE BÚSQUEDA FIJA -->
     <footer class="fixed bottom-0 left-0 w-full bg-white shadow-2xl z-20">
         <div class="max-w-7xl mx-auto p-4">
             <div class="flex items-center space-x-2">
-                <!-- Barra de Búsqueda Redondeada -->
                 <input type="text" 
                        id="searchInput"
                        placeholder="Escribe tu consulta aquí..." 
-                       class="flex-grow p-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-blue-600 transition-colors text-black"
-                       aria-label="Campo de entrada de búsqueda">
+                       class="flex-grow p-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-blue-600 transition-colors text-black">
 
-                <!-- Botón de Búsqueda Redondo (Chitón de búsqueda) -->
-                <button id="searchButton" class="p-3 rounded-full bg-blue-600 text-white shadow-lg transition-colors duration-200 hover:bg-blue-700 active:scale-95" 
-                        aria-label="Buscar">
-                    <!-- Icono de Lupa -->
+                <button id="searchButton" class="p-3 rounded-full bg-blue-600 text-white shadow-lg transition-colors duration-200 hover:bg-blue-700 active:scale-95">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -159,7 +141,7 @@
         </div>
     </footer>
 
-    <!-- Lógica JavaScript para la aplicación -->
+    <!-- Lógica JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Elementos DOM
@@ -212,7 +194,7 @@
                     'interpellation': 'Interpelación',
                     'speech_correction': 'Corrección de Discursos',
                     'topic_breakdown': 'Desglose de Tópico',
-                    'position_correction': 'Corrección de Documento de Posición'
+                    'position_correction': 'Corrección de Documento'
                 };
                 
                 currentModeText.textContent = modeTexts[mode];
@@ -221,10 +203,10 @@
                 // Actualizar placeholder según el modo
                 const placeholders = {
                     'search': 'Escribe tu pregunta de investigación...',
-                    'interpellation': 'Pega aquí el discurso para interpelar...',
-                    'speech_correction': 'Pega aquí tu discurso para corregir...',
-                    'topic_breakdown': 'Escribe el tópico que quieres desglosar...',
-                    'position_correction': 'Pega aquí tu documento de posición...'
+                    'interpellation': 'Pega el discurso para interpelar...',
+                    'speech_correction': 'Pega tu discurso para corregir...',
+                    'topic_breakdown': 'Escribe el tópico a desglosar...',
+                    'position_correction': 'Pega tu documento de posición...'
                 };
                 
                 searchInput.placeholder = placeholders[mode];
@@ -238,24 +220,24 @@
                 resultContainer.classList.remove('active');
                 
                 try {
-                    // Construir prompt según el modo
+                    // Construir prompt según el modo (más simples)
                     let prompt = '';
                     
                     switch(currentMode) {
                         case 'search':
-                            prompt = `Busca información sobre "${query}" y proporciona enlaces relevantes de sitios .org, gubernamentales o de la ONU. Organiza la información por fecha, poniendo primero los más recientes. Para cada enlace, incluye un breve párrafo explicativo. Responde en español.`;
+                            prompt = `Busca: ${query}. Fuentes: ONU, gobierno, .org. Ordena por fecha. Responde en español.`;
                             break;
                         case 'interpellation':
-                            prompt = `Analiza críticamente el siguiente discurso: "${query}". Actúa como un delegado de un MUN y cuestiona cada parte del discurso. Responde en tercera persona usando frases como "La delegación de [país] se cuestiona..." o "Como [país] aborda...". Sé diplomático pero crítico. Responde en español.`;
+                            prompt = `Interpela: ${query}. Usa tercera persona. Sé crítico. Responde en español.`;
                             break;
                         case 'speech_correction':
-                            prompt = `Corrige el siguiente discurso MUN: "${query}". Analiza según la estructura: 1. Introducción (nivel mundial), 2. Desarrollo (nivel nacional), 3. Conclusión (propuestas internacionales). Proporciona correcciones específicas y sugerencias de mejora. Responde en español.`;
+                            prompt = `Corrige: ${query}. Revisa estructura MUN. Responde en español.`;
                             break;
                         case 'topic_breakdown':
-                            prompt = `Desglosa el tópico "${query}" para un delegado MUN. Proporciona preguntas de investigación que debería responder para preparar su discurso o documento de posición. Incluye preguntas sobre antecedentes, situación actual, actores clave, desafíos y posibles soluciones. Responde en español.`;
+                            prompt = `Desglosa: ${query}. Da preguntas para investigación MUN. Responde en español.`;
                             break;
                         case 'position_correction':
-                            prompt = `Corrige el siguiente documento de posición MUN: "${query}". Verifica que tenga la estructura adecuada (tópico, comisión, delegación, delegado), que cumpla con el rango de 500-800 palabras, y que incluya introducción (nivel mundial), desarrollo (nivel nacional) y conclusión (propuestas internacionales). Proporciona correcciones específicas. Responde en español.`;
+                            prompt = `Corrige documento: ${query}. Verifica estructura MUN. Responde en español.`;
                             break;
                     }
                     
@@ -275,7 +257,7 @@
                     });
                     
                     if (!response.ok) {
-                        throw new Error(`Error en la API: ${response.status}`);
+                        throw new Error(`Error: ${response.status}`);
                     }
                     
                     const data = await response.json();
@@ -303,141 +285,66 @@
             function generateFallbackResponse(mode, query) {
                 const responses = {
                     'search': `
-                        <h3 class="font-bold text-lg mb-3">Resultados de búsqueda para: "${query}"</h3>
+                        <h3 class="font-bold text-lg mb-3">Resultados para: "${query}"</h3>
                         <div class="space-y-4">
-                            <div class="border-l-4 border-blue-500 pl-4">
-                                <p class="text-sm text-gray-500">2024 - Informe más reciente</p>
-                                <a href="#" class="text-blue-600 font-medium">https://www.un.org/es/global-issues/${query.replace(/\s+/g, '-').toLowerCase()}</a>
-                                <p class="mt-1">Informe actualizado de las Naciones Unidas sobre las tendencias globales relacionadas con ${query}.</p>
+                            <div>
+                                <a href="#" class="text-blue-600 font-medium">un.org/es</a>
+                                <p class="mt-1">Informe de la ONU sobre ${query}.</p>
                             </div>
-                            <div class="border-l-4 border-blue-400 pl-4">
-                                <p class="text-sm text-gray-500">2023 - Documento gubernamental</p>
-                                <a href="#" class="text-blue-600 font-medium">https://www.who.int/es/news-room/fact-sheets/detail/${query.replace(/\s+/g, '-').toLowerCase()}</a>
-                                <p class="mt-1">La Organización Mundial de la Salud proporciona datos estadísticos y recomendaciones sobre ${query}.</p>
-                            </div>
-                            <div class="border-l-4 border-blue-300 pl-4">
-                                <p class="text-sm text-gray-500">2022 - Informe de ONG</p>
-                                <a href="#" class="text-blue-600 font-medium">https://www.amnesty.org/es/latest/research/2022/05/${query.replace(/\s+/g, '-').toLowerCase()}/</a>
-                                <p class="mt-1">Amnistía Internacional documenta violaciones de derechos humanos relacionadas con ${query}.</p>
+                            <div>
+                                <a href="#" class="text-blue-600 font-medium">who.int/es</a>
+                                <p class="mt-1">Datos de la OMS sobre ${query}.</p>
                             </div>
                         </div>
                     `,
                     'interpellation': `
-                        <h3 class="font-bold text-lg mb-3">Interpelación del discurso</h3>
-                        <div class="space-y-3 bg-red-50 p-4 rounded-lg">
-                            <p class="text-red-700 font-medium">La delegación de México se cuestiona la afirmación sobre...</p>
-                            <p class="text-red-700">¿Cómo explica la delegación la contradicción entre su posición actual y sus compromisos previos en materia de ${query}?</p>
-                            <p class="text-red-700">La delegación de Francia solicita aclaraciones sobre las fuentes citadas en relación con...</p>
-                            <p class="text-red-700">Como Canadá aborda las implicaciones presupuestarias de su propuesta?</p>
-                            <p class="text-red-700">La delegación de Brasil expresa preocupación por la viabilidad técnica de la solución propuesta.</p>
+                        <h3 class="font-bold text-lg mb-3">Interpelación</h3>
+                        <div class="space-y-3">
+                            <p>La delegación se cuestiona sobre ${query}.</p>
+                            <p>¿Cómo explica su posición?</p>
                         </div>
                     `,
                     'speech_correction': `
-                        <h3 class="font-bold text-lg mb-3">Corrección del discurso</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <h4 class="font-semibold text-blue-700">1. Introducción (Nivel mundial) - ✅ Bien estructurada</h4>
-                                <p class="text-sm text-gray-600 mt-1">Has contextualizado adecuadamente el problema a nivel global. Sugerencia: Incluye una estadística reciente de la ONU para fortalecer tu argumento.</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-blue-700">2. Desarrollo (Nivel nacional) - ⚠️ Necesita mejora</h4>
-                                <p class="text-sm text-gray-600 mt-1">Falta mencionar programas específicos implementados por tu país. Ejemplo: "El programa Nacional de [país] ha logrado..."</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-blue-700">3. Conclusión (Propuestas internacionales) - ✅ Bien planteada</h4>
-                                <p class="text-sm text-gray-600 mt-1">Tus propuestas son realistas y alineadas con los ODS. Considera añadir un mecanismo de financiación concreto.</p>
-                            </div>
+                        <h3 class="font-bold text-lg mb-3">Corrección</h3>
+                        <div class="space-y-2">
+                            <p><strong>Introducción:</strong> Bien contextualizada.</p>
+                            <p><strong>Desarrollo:</strong> Añade datos nacionales.</p>
+                            <p><strong>Conclusión:</strong> Propuestas claras.</p>
                         </div>
                     `,
                     'topic_breakdown': `
-                        <h3 class="font-bold text-lg mb-3">Preguntas de investigación: "${query}"</h3>
-                        <div class="space-y-3">
-                            <p class="font-medium">Antecedentes históricos:</p>
-                            <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                                <li>¿Cuándo surgió ${query} como problema internacional?</li>
-                                <li>¿Qué resoluciones previas de la ONU existen sobre este tema?</li>
-                            </ul>
-                            
-                            <p class="font-medium mt-3">Situación actual:</p>
-                            <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                                <li>¿Cuáles son las estadísticas más recientes sobre ${query}?</li>
-                                <li>¿Qué países son los más afectados?</li>
-                            </ul>
-                            
-                            <p class="font-medium mt-3">Actores clave:</p>
-                            <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                                <li>¿Qué organismos internacionales trabajan en ${query}?</li>
-                                <li>¿Qué países tienen posiciones líderes en este tema?</li>
-                            </ul>
-                            
-                            <p class="font-medium mt-3">Soluciones posibles:</p>
-                            <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                                <li>¿Qué medidas han demostrado efectividad?</li>
-                                <li>¿Qué recursos se necesitan para implementar soluciones?</li>
-                            </ul>
+                        <h3 class="font-bold text-lg mb-3">Preguntas: "${query}"</h3>
+                        <div class="space-y-2">
+                            <p>• Antecedentes del tema</p>
+                            <p>• Situación actual</p>
+                            <p>• Posición de países</p>
+                            <p>• Soluciones posibles</p>
                         </div>
                     `,
                     'position_correction': `
-                        <h3 class="font-bold text-lg mb-3">Corrección del documento de posición</h3>
-                        <div class="space-y-4">
-                            <div class="p-3 bg-green-50 rounded-lg">
-                                <h4 class="font-semibold text-green-700">✅ Elementos correctos:</h4>
-                                <ul class="list-disc pl-5 text-sm text-gray-600 mt-1">
-                                    <li>Estructura general adecuada</li>
-                                    <li>Uso correcto del lenguaje diplomático</li>
-                                    <li>Inclusión de referencias a resoluciones de la ONU</li>
-                                </ul>
-                            </div>
-                            
-                            <div class="p-3 bg-yellow-50 rounded-lg">
-                                <h4 class="font-semibold text-yellow-700">⚠️ Áreas de mejora:</h4>
-                                <ul class="list-disc pl-5 text-sm text-gray-600 mt-1">
-                                    <li>Falta mencionar programas nacionales específicos</li>
-                                    <li>Las propuestas internacionales necesitan mayor detalle</li>
-                                    <li>Incluir más datos estadísticos recientes</li>
-                                </ul>
-                            </div>
-                            
-                            <div class="p-3 bg-blue-50 rounded-lg">
-                                <h4 class="font-semibold text-blue-700">📝 Sugerencias:</h4>
-                                <ul class="list-disc pl-5 text-sm text-gray-600 mt-1">
-                                    <li>Añadir 2-3 párrafos sobre la posición histórica de tu país</li>
-                                    <li>Especificar mecanismos de implementación para las propuestas</li>
-                                    <li>Incluir al menos 3 fuentes bibliográficas adicionales</li>
-                                </ul>
-                            </div>
+                        <h3 class="font-bold text-lg mb-3">Corrección documento</h3>
+                        <div class="space-y-2">
+                            <p>✅ Estructura correcta</p>
+                            <p>⚠️ Añade más datos</p>
+                            <p>📝 Mejora propuestas</p>
                         </div>
                     `
                 };
                 
-                return responses[mode] || `<p>Respuesta no disponible para este modo.</p>`;
+                return responses[mode] || `<p>Respuesta no disponible.</p>`;
             }
             
-            // Formatear la respuesta según el modo
+            // Formatear la respuesta
             function formatResponse(text) {
                 let formattedText = text;
                 
-                // Aplicar formato según el modo
+                // Resaltar elementos según el modo
                 switch(currentMode) {
                     case 'search':
-                        // Resaltar enlaces y fechas
-                        formattedText = formattedText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="text-blue-600 underline" target="_blank">$1</a>');
-                        formattedText = formattedText.replace(/(\d{1,2}\/\d{1,2}\/\d{4}|\d{4})/g, '<span class="font-semibold text-blue-700">$1</span>');
+                        formattedText = formattedText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="text-blue-600 underline">$1</a>');
                         break;
                     case 'interpellation':
-                        // Resaltar frases de cuestionamiento
-                        formattedText = formattedText.replace(/(La delegación de [^ se cuestiona]+ se cuestiona)/g, '<span class="font-semibold text-red-600">$1</span>');
-                        formattedText = formattedText.replace(/(Como [^ aborda]+ aborda)/g, '<span class="font-semibold text-red-600">$1</span>');
-                        break;
-                    case 'speech_correction':
-                    case 'position_correction':
-                        // Resaltar secciones y correcciones
-                        formattedText = formattedText.replace(/(Introducción|Desarrollo|Conclusión|Bibliografía)/g, '<span class="font-bold text-blue-700">$1</span>');
-                        formattedText = formattedText.replace(/(Corrección:|Sugerencia:|Mejora:)/g, '<span class="font-semibold text-green-600">$1</span>');
-                        break;
-                    case 'topic_breakdown':
-                        // Resaltar preguntas
-                        formattedText = formattedText.replace(/(\d+\.\s|•\s)/g, '<span class="font-semibold text-blue-600">$1</span>');
+                        formattedText = formattedText.replace(/(La delegación [^\.]+\.)/g, '<span class="text-red-600 font-medium">$1</span>');
                         break;
                 }
                 
@@ -469,7 +376,7 @@
                 }
             });
 
-            // Procesar búsqueda al hacer clic en el botón
+            // Procesar búsqueda
             searchButton.addEventListener('click', () => {
                 const query = searchInput.value.trim();
                 if (query) {
