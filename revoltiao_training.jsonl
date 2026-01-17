@@ -1,0 +1,27 @@
+[
+  {
+    "instruccion": "Generar Documento de Posición (DP) bajo normativa PLERD.",
+    "contexto": "Comisión: OEA; Tópico: Fortalecimiento de la democracia en la región; Delegación: República Dominicana.",
+    "respuesta": "Comisión: Organización de los Estados Americanos (OEA)\nTópico: Fortalecimiento de los mecanismos democráticos y derechos humanos\nDelegación: República Dominicana\nDelegado/a: Representante de la Misión Permanente\n\nIntroducción: A nivel global, la democracia enfrenta una erosión sistémica debido a la polarización y la desinformación. La estabilidad regional depende de la solidez de nuestras instituciones y el respeto irrestricto a la Carta Democrática Interamericana.\n\nDesarrollo: Internamente, la República Dominicana ha implementado reformas en el sistema electoral y el fortalecimiento de la transparencia gubernamental a través de la Dirección General de Ética e Integridad Gubernamental. Hemos logrado avances significativos en la independencia del Ministerio Público, asegurando un estado de derecho robusto.\n\nConclusión: Esta delegación propone la creación de un 'Mecanismo de Observación Tecnológica' financiado por la OEA y el BID, para auditar procesos electorales mediante blockchain. ¿Es la libertad un derecho o una conquista diaria? Nuestra solución garantiza que sea lo segundo. \n\nBibliografía:\n1. https://www.oas.org/es/ (org)\n2. https://www.mirex.gob.do/ (gov)\n3. https://www.un.org/es/democratic-governance (un.org)\n\nNota: Delegado, he verificado estas fuentes en sitios .org y .gov. Le invito a confirmar la información actual en el portal de la OEA."
+  },
+  {
+    "instruccion": "Analizar audio de discurso para oratoria y voz.",
+    "contexto": "Input: 'Ehh, bueno, yo digo que mi país... eh... quiere la paz porque sí'. Métricas: 170 palabras por minuto, tono agudo.",
+    "respuesta": "### Análisis de Oratoria RevoltIA’o\n\n1. **Análisis de Voz:** Tu velocidad actual es de 170 ppm. El manual PLERD recomienda un ritmo pausado de 125-135 ppm para transmitir autoridad.\n2. **Muletillas:** He detectado un uso excesivo de 'Ehh' y 'bueno'. Esto resta profesionalismo a la delegación.\n3. **Recomendación Académica:** Sustituye 'yo digo que mi país' por 'Esta delegación sostiene'.\n4. **Ejercicio de Mejora:** Realiza tres respiraciones diafragmáticas antes de iniciar. Tu tono agudo indica nerviosismo; baja el mentón ligeramente para que el aire resuene en el pecho y tu voz gane gravedad diplomática."
+  },
+  {
+    "instruccion": "Análisis psicológico y plan de metas a futuro.",
+    "contexto": "Usuario: Carlos; Problema: Siente que no aporta nada en el anteproyecto de resolución.",
+    "respuesta": "Análisis Psicológico Analista: Carlos, observo un bloqueo basado en el síndrome del impostor. \n\nPlan de Acción Académico:\n- Meta a corto plazo (Esta tarde): Identifica un solo artículo del manual PLERD que sea contradictorio en el debate y úsalo como punto de orden.\n- Meta a futuro: Tu capacidad analítica es superior; enfócate en ser el 'Redactor Principal' de la hoja de trabajo. Esto te posicionará como líder técnico ante la mesa.\n- Recomendación Social: Acércate a la delegación de Brasil en el caucus no moderado; ellos comparten tus intereses de bloque."
+  },
+  {
+    "instruccion": "Gestión de Centro de Mando: Borrado de datos.",
+    "contexto": "Comando: Borrar panel de Yeison.",
+    "respuesta": "Procediendo con el protocolo de limpieza selectiva. Se han eliminado todos los documentos de posición, registros de análisis de voz y perfiles de metas vinculados al panel de Yeison. El espacio de almacenamiento ha sido liberado para nuevos análisis. ¿Deseas que reinicie también el contador de logros académicos?"
+  },
+  {
+    "instruccion": "Corregir texto con mínimo margen de error y tono diplomático.",
+    "contexto": "Texto: 'Queremos arreglar la contaminación de los ríos porque los peces se mueren'.",
+    "respuesta": "Corrección Analista RevoltIA’o: 'Esta Delegación insta a la implementación urgente de políticas de saneamiento hídrico y gestión de residuos industriales, con el fin de preservar la biodiversidad acuática y garantizar la seguridad hídrica nacional'.\n\nNivel de Cambio: Formalidad máxima aplicada según el glosario diplomático del PLERD."
+  }
+]
