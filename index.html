@@ -1,25 +1,40 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUN AI • Sistema Delegado 24/7</title>
-  <link rel="stylesheet" href="style.css" />
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; display: grid; grid-template-columns: 200px 1fr 200px; height: 100vh; margin: 0; }
+        #left { border-right: 1px solid #0f0; padding: 10px; overflow-y: auto; }
+        #right { border-left: 1px solid #0f0; padding: 10px; }
+        #chat { display: flex; flex-direction: column; padding: 20px; position: relative; }
+        #consola { flex: 1; overflow-y: auto; border: 1px solid #040; padding: 10px; margin-bottom: 10px; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; outline: none; }
+        .btn-delete { background: #400; color: #f00; border: 1px solid #f00; padding: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .slogan { font-size: 0.6em; position: absolute; bottom: 5px; right: 25px; color: #050; }
+    </style>
 </head>
 <body>
-
-  <div class="app">
-    <h1>MUN AI</h1>
-    <p class="sub">Tu sistema delegado automático • 24/7 • Cloudflare AI</p>
-
-    <div class="chat-box" id="chat"></div>
-
-    <div class="input-area">
-      <input type="text" id="userInput" placeholder="Escribe tu pregunta MUN..." />
-      <button id="sendBtn">Enviar</button>
+    <div id="left"><h3>ARTÍCULOS</h3><div id="arts">> Analizando red...<br>> Encriptación activa</div></div>
+    <div id="chat">
+        <h3>ALFRED_INTERFACE_v1</h3>
+        <div id="consola"></div>
+        <input type="text" id="in" placeholder="ORDEN_PARA_ALFRED..." onkeypress="if(event.key=='Enter')send()">
+        <div class="slogan">Diplomacia y Análisis para Yeison</div>
     </div>
-  </div>
-
-  <script src="app.js"></script>
+    <div id="right">
+        <h3>COMANDO</h3>
+        <div style="border:1px solid #0f0; padding:5px; margin-bottom:10px">RAM: 3GB OK</div>
+        <button class="btn-delete" onclick="borrar()">BORRAR_TRAZAS</button>
+    </div>
+    <script>
+        function send() {
+            let i = document.getElementById('in');
+            let c = document.getElementById('consola');
+            c.innerHTML += `<div>> Yeison: ${i.value}</div>`;
+            fetch('/ask', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({msg:i.value})})
+            .then(r=>r.json()).then(d=>{ c.innerHTML += `<div style="color:#fff">> Alfred: ${d.response}</div>`; c.scrollTop = c.scrollHeight; });
+            i.value = '';
+        }
+        function borrar() { fetch('/borrar', {method:'POST'}).then(()=>{ document.getElementById('consola').innerHTML = 'TRAZAS_ELIMINADAS'; }); }
+    </script>
 </body>
 </html>
