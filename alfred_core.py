@@ -1,35 +1,43 @@
 import os
 import subprocess
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
+# Rutas locales dentro de la tablet
 BASE_DIR = "/sdcard/Alfred"
-MODEL = f"{BASE_DIR}/cerebro/Alfred_Model_gguf.gguf"
-VOICE = f"{BASE_DIR}/voz/es_ES-low.onnx"
-ENGINE = f"{BASE_DIR}/cerebro/llama-cli"
-
-def hablar(texto):
-    # Alfred habla por altavoz
-    os.system(f'echo "{texto}" | piper --model {VOICE} --output_file {BASE_DIR}/voz/temp.wav')
-    os.system(f'mpv {BASE_DIR}/voz/temp.wav')
+MODEL_PATH = f"{BASE_DIR}/cerebro/model.gguf"
+ENGINE_PATH = f"{BASE_DIR}/cerebro/llama-cli"
 
 @app.route('/')
-def index(): return render_template('index.html')
+def index():
+    return render_template('index.html')
 
 @app.route('/ask', methods=['POST'])
 def ask():
-    msg = request.json.get("msg")
-    # Ejecución local
-    cmd = [ENGINE, "-m", MODEL, "-p", f"### Sistema: Eres Alfred, la IA de Yeison. \n### Usuario: {msg} \n### Alfred:", "-n", "128"]
-    res = subprocess.check_output(cmd).decode('utf-8').split("### Alfred:")[-1].strip()
-    hablar(res)
-    return jsonify({"response": res})
+    user_msg = request.json.get("msg")
+    
+    # Ejecución local: usa 4 hilos para que sea rápido sin internet
+    cmd = [
+        ENGINE_PATH, "-m", MODEL_PATH,
+        "-p", f"### Sistema: Eres Alfred, la IA offline de Yeison. \n### Usuario: {user_msg} \n### Alfred:",
+        "-n", "128", "-t", "4", "--temp", "0.4"
+    ]
+    
+    try:
+        raw_output = subprocess.check_output(cmd).decode('utf-8')
+        respuesta = raw_output.split("### Alfred:")[-1].strip()
+    except:
+        respuesta = "Error en el núcleo local, señor Yeison."
+        
+    return jsonify({"response": respuesta})
 
-@app.route('/borrar', methods=['POST'])
+@app.route('/borrar_trazas', methods=['POST'])
 def borrar():
-    os.system(f"rm {BASE_DIR}/voz/*.wav")
-    return jsonify({"status": "Trazas borradas"})
+    return jsonify({"status": "Consola purgada localmente."})
 
 if __name__ == '__main__':
+    # '127.0.0.1' es la clave para que funcione SIN WIFI
     app.run(host='127.0.0.1', port=8080)
