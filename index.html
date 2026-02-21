@@ -1,40 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfred</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; display: grid; grid-template-columns: 200px 1fr 200px; height: 100vh; margin: 0; }
-        #left { border-right: 1px solid #0f0; padding: 10px; overflow-y: auto; }
-        #right { border-left: 1px solid #0f0; padding: 10px; }
-        #chat { display: flex; flex-direction: column; padding: 20px; position: relative; }
-        #consola { flex: 1; overflow-y: auto; border: 1px solid #040; padding: 10px; margin-bottom: 10px; }
-        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; outline: none; }
-        .btn-delete { background: #400; color: #f00; border: 1px solid #f00; padding: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
-        .slogan { font-size: 0.6em; position: absolute; bottom: 5px; right: 25px; color: #050; }
+        body { margin: 0; overflow: hidden; background: black; }
     </style>
 </head>
 <body>
-    <div id="left"><h3>ARTÍCULOS</h3><div id="arts">> Analizando red...<br>> Encriptación activa</div></div>
-    <div id="chat">
-        <h3>ALFRED_INTERFACE_v1</h3>
-        <div id="consola"></div>
-        <input type="text" id="in" placeholder="ORDEN_PARA_ALFRED..." onkeypress="if(event.key=='Enter')send()">
-        <div class="slogan">Diplomacia y Análisis para Yeison</div>
-    </div>
-    <div id="right">
-        <h3>COMANDO</h3>
-        <div style="border:1px solid #0f0; padding:5px; margin-bottom:10px">RAM: 3GB OK</div>
-        <button class="btn-delete" onclick="borrar()">BORRAR_TRAZAS</button>
-    </div>
-    <script>
-        function send() {
-            let i = document.getElementById('in');
-            let c = document.getElementById('consola');
-            c.innerHTML += `<div>> Yeison: ${i.value}</div>`;
-            fetch('/ask', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({msg:i.value})})
-            .then(r=>r.json()).then(d=>{ c.innerHTML += `<div style="color:#fff">> Alfred: ${d.response}</div>`; c.scrollTop = c.scrollHeight; });
-            i.value = '';
-        }
-        function borrar() { fetch('/borrar', {method:'POST'}).then(()=>{ document.getElementById('consola').innerHTML = 'TRAZAS_ELIMINADAS'; }); }
+    <div id="root"></div>
+    <script type="text/babel">
+        // Aquí va tu código React exacto, con una pequeña modificación:
+        // en lugar de simular respuestas, llamará a Android.sendMessageToAI()
+        // y para búsquedas usará Android.buscarEnWeb()
+
+        const { useState, useEffect, useRef } = React;
+
+        // Datos estáticos (igual que en tu código)
+        const USERS_DATA = [ ... ];  // copia desde tu código
+        const ARTICLES = [ ... ];    // copia desde tu código
+
+        const App = () => {
+            const [users, setUsers] = useState(USERS_DATA);
+            const [chatLog, setChatLog] = useState([
+                { role: 'system', content: '>>> SYSTEM INITIALIZED. CONNECTION SECURE.' },
+                { role: 'ai', content: 'Esperando órdenes, operador. ¿Cuál es el siguiente objetivo?' }
+            ]);
+            const [inputValue, setInputValue] = useState('');
+            const [activePanel, setActivePanel] = useState('dashboard');
+            const [matrixText, setMatrixText] = useState('');
+            const chatEndRef = useRef(null);
+
+            // Matrix effect (igual)
+            useEffect(() => {
+                const chars = "010101ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*";
+                const interval = setInterval(() => {
+                    let text = "";
+                    for (let i = 0; i < 20; i++) {
+                        text += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    setMatrixText(text);
+                }, 100);
+                return () => clearInterval(interval);
+            }, []);
+
+            useEffect(() => {
+                chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, [chatLog]);
+
+            const handleSendMessage = async (e) => {
+                e.preventDefault();
+                if (!inputValue.trim()) return;
+
+                const userMsg = inputValue;
+                setChatLog(prev => [...prev, { role: 'user', content: userMsg }]);
+                setInputValue('');
+
+                // Comprobar si es comando de búsqueda
+                if (userMsg.startsWith('/buscar ')) {
+                    const query = userMsg.substring(8);
+                    // Llamar a función nativa de búsqueda (Android.buscarEnWeb)
+                    if (window.Android && Android.buscarEnWeb) {
+                        const resultado = Android.buscarEnWeb(query);
+                        if (resultado === "SIN_CONEXION") {
+                            setChatLog(prev => [...prev, { role: 'ai', content: 'No hay conexión a Internet. Usando modo offline.' }]);
+                            // De todas formas pasar query a la IA offline
+                            const respuestaAI = Android.sendMessageToAI(query);
+                            setChatLog(prev => [...prev, { role: 'ai', content: respuestaAI }]);
+                        } else {
+                            setChatLog(prev => [...prev, { role: 'ai', content: 'Resultado de búsqueda:\n' + resultado }]);
+                        }
+                    } else {
+                        setChatLog(prev => [...prev, { role: 'ai', content: 'Función de búsqueda no disponible.' }]);
+                    }
+                }
+                // Comprobar si es comando para abrir app
+                else if (userMsg.toLowerCase().startsWith('abre ')) {
+                    const appName = userMsg.substring(5);
+                    if (window.Android && Android.abrirApp) {
+                        const ok = Android.abrirApp(appName);
+                        if (ok) {
+                            setChatLog(prev => [...prev, { role: 'ai', content: `Abriendo ${appName}...` }]);
+                        } else {
+                            setChatLog(prev => [...prev, { role: 'ai', content: `No pude abrir ${appName}.` }]);
+                        }
+                    } else {
+                        setChatLog(prev => [...prev, { role: 'ai', content: 'Función de apertura no disponible.' }]);
+                    }
+                }
+                // Mensaje normal a la IA
+                else {
+                    if (window.Android && Android.sendMessageToAI) {
+                        const respuesta = Android.sendMessageToAI(userMsg);
+                        setChatLog(prev => [...prev, { role: 'ai', content: respuesta }]);
+                    } else {
+                        // fallback simulado
+                        setTimeout(() => {
+                            setChatLog(prev => [...prev, { role: 'ai', content: `Procesando: "${userMsg}"... (modo simulado)` }]);
+                        }, 1000);
+                    }
+                }
+            };
+
+            // Renderizado igual al que proporcionaste (aquí pondrías todo el JSX)
+            // Por brevedad, pega aquí todo tu componente, pero reemplaza las referencias a 'Terminal', etc. 
+            // Asegúrate de que los iconos de Lucide React funcionen. Si no, puedes usar emojis o texto.
+            // Como alternativa, puedes eliminar los iconos o usar fuentes de iconos.
+
+            // Para simplificar, mostraré una versión reducida del chat, pero tú debes copiar tu JSX completo.
+
+            return (
+                <div className="flex h-screen bg-black text-green-500 font-mono">
+                    {/* Sidebar (copia desde tu código) */}
+                    {/* Main content (copia desde tu código) */}
+                    <div> {/* Contenedor temporal */} 
+                        <h1>Alfred Launcher</h1>
+                        <div className="chat">
+                            {chatLog.map((msg, i) => (
+                                <div key={i}>{msg.role}: {msg.content}</div>
+                            ))}
+                            <div ref={chatEndRef} />
+                        </div>
+                        <form onSubmit={handleSendMessage}>
+                            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+                            <button type="submit">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
